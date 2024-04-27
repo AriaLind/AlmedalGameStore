@@ -1,0 +1,419 @@
+﻿@page "/Admin/ProductManagement"
+@using AlmedalGameStoreShared.Models
+@using Microsoft.AspNetCore.Authorization
+
+@rendermode InteractiveServer
+
+@attribute [Authorize(Roles = "Admin")]
+
+<Container Fluid Padding="Padding.Is3">
+    <Div Margin="Margin.IsAuto.OnX">
+        <Card>
+            <CardHeader Flex="Flex.JustifyContent.Between.AlignItems.Center">
+                <Div>
+                    <Field Display="Display.InlineFlex" Margin="Margin.Is0.FromBottom">
+                        <TextEdit Placeholder="Sök produkt" @bind-Text="SearchQuery" />
+                    </Field>
+                </Div>
+                <Div Flex="Flex.JustifyContent.Between.AlignItems.Center" Gap="Gap.Is3">
+                    <Field Display="Display.InlineFlex" Margin="Margin.Is0.FromBottom">
+                        <FieldHelp>
+                            <Paragraph style="width: 50px;">@MinPrice kr</Paragraph>
+                        </FieldHelp>
+                        <FieldBody>
+                            <Slider Margin="Margin.Is2" TValue="decimal" @bind-Value="@SliderValue" Step="10" Max="@MaxPrice" />
+                        </FieldBody>
+                        <FieldHelp>
+                            <Paragraph style="width: 50px;">@SliderValue kr</Paragraph>
+                        </FieldHelp>
+                    </Field>
+                    <Button Color="Color.Primary" Clicked="() => FilterProducts(Filter)">Filtrera</Button>
+
+                    <Field Display="Display.InlineFlex" Margin="Margin.Is0.FromBottom">
+                        <Select TValue="string" SelectedValue="@Filter" SelectedValueChanged="(string value) => FilterProducts(value)">
+                            <SelectItem>Alla</SelectItem>
+                            <SelectItem>I lager</SelectItem>
+                            <SelectItem>Slut på lagret</SelectItem>
+                        </Select>
+                    </Field>
+                    <Field Display="Display.InlineFlex" Margin="Margin.Is0.FromBottom">
+                        <Button Color="Color.Primary" Clicked="@ShowModal">Lägg till produkt</Button>
+                    </Field>
+                </Div>
+            </CardHeader>
+        </Card>
+    </Div>
+    <Div Margin="Margin.IsAuto.OnX">
+        <Card>
+            <CardHeader Padding="Padding.Is0.FromBottom">
+                <CardTitle Flex="Flex.Column.AlignItems.Start">
+                    <Span TextWeight="TextWeight.Bold">Produkter</Span>
+                    <Span TextColor="TextColor.Muted">@Products.Count produkter</Span>
+                </CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Table Borderless>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHeaderCell>
+                                <Check TValue="bool" />
+                            </TableHeaderCell>
+                            <TableHeaderCell>Produkt-Id</TableHeaderCell>
+                            <TableHeaderCell>Namn</TableHeaderCell>
+                            <TableHeaderCell>Pris</TableHeaderCell>
+                            <TableHeaderCell>Lagersaldo</TableHeaderCell>
+                            <TableHeaderCell>Ålderskrav</TableHeaderCell>
+                            <TableHeaderCell>Status</TableHeaderCell>
+                            <TableHeaderCell>Åtgärder</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <Virtualize Items="Products">
+                            <TableRow>
+                                <TableRowHeader>
+                                    <Check TValue="bool" />
+                                </TableRowHeader>
+                                <TableRowCell>
+                                    <Anchor To="#" TextColor="TextColor.Dark">
+                                        @context.Id
+                                    </Anchor>
+                                </TableRowCell>
+                                <TableRowCell>
+                                    @context.Name
+                                </TableRowCell>
+                                <TableRowCell>
+                                    @context.Price
+                                </TableRowCell>
+                                <TableRowCell>
+                                    @context.Stock
+                                </TableRowCell>
+                                <TableRowCell>
+                                    @context.AgeRequirement
+                                </TableRowCell>
+                                <TableRowCell>
+                                    @if (context.Stock <= 0)
+                                    {
+                                        <Badge Color="Color.Warning">Slut på lagret</Badge>
+                                    }
+                                    else if (context.Stock >= 1)
+                                    {
+                                        <Badge Color="Color.Primary">I lager</Badge>
+                                    }
+                                </TableRowCell>
+                                <TableRowCell TextAlignment="TextAlignment.End">
+                                    <Button Type="ButtonType.Link" Color="Color.Light" Size="Size.Small" @onclick="(() => ShowEditProductModal(context))">
+                                        <Icon Name="IconName.Edit" />
+                                    </Button>
+                                    <Button Type="ButtonType.Link" Color="Color.Light" Size="Size.Small" @onclick="(() => OpenDeleteProductModal(context))">
+                                        <Icon Name="IconName.Delete" />
+                                    </Button>
+                                </TableRowCell>
+                            </TableRow>
+
+                            <Modal @ref="editProductModalRef" Closing="@OnEditProductModalClosing">
+                                <EditForm Model="editingProduct" FormName="EditingProductForm" OnValidSubmit="() => TryCloseEditProductModal(editingProduct)">
+                                    <ChildContent Context="editProductContext">
+                                        <ModalContent Centered Size="ModalSize.Fullscreen">
+                                            <ModalHeader style="background-color: transparent; color: black">
+                                                <ModalTitle>Redigera en produkt</ModalTitle>
+                                            </ModalHeader>
+                                            <ModalBody>
+                                                <Div Margin="Margin.IsAuto.OnX" Padding="Padding.Is5.OnX" Width="Width.Is50">
+                                                    <Heading Size="HeadingSize.Is2" Margin="Margin.Is3.FromBottom">
+                                                        Redigera en produkt
+                                                    </Heading>
+
+
+                                                    <DataAnnotationsValidator />
+
+                                                    <Field>
+                                                        <FieldLabel>
+                                                            Produktnamn
+                                                        </FieldLabel>
+                                                        <FieldBody>
+                                                            <InputText Placeholder="New product name" @bind-Value="@editingProduct.Name" class="form-control" />
+                                                            <ValidationMessage For="@(() => editingProduct.Name)" />
+                                                        </FieldBody>
+                                                    </Field>
+                                                    <Fields>
+                                                        <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                                            <FieldLabel>
+                                                                Omslagsbild
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <InputText @bind-Value="editingProduct.CoverPicturePath" Placeholder="Picture path" class="form-control" />
+                                                            </FieldBody>
+                                                        </Field>
+                                                        <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                                            <FieldLabel>
+                                                                Pris
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <InputNumber TValue="decimal" Placeholder="New price SEK" @bind-Value="@editingProduct.Price" class="form-control" />
+                                                                <ValidationMessage For="@(() => editingProduct.Price)" />
+                                                            </FieldBody>
+                                                        </Field>
+                                                    </Fields>
+                                                    <Fields>
+                                                        <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                                            <FieldLabel>
+                                                                Kategori
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <Select TValue="string" @bind-SelectedValue="ProductCategory" MaxVisibleItems="5">
+                                                                    @foreach (GameCategoriesEnum value in Enum.GetValues(typeof(GameCategoriesEnum)))
+                                                                    {
+                                                                        <SelectItem>@value</SelectItem>
+                                                                    }
+                                                                </Select>
+                                                                <Button Color="Color.Success" Margin="Margin.Is1" Clicked="() => AddProductCategory(editingProduct, ProductCategory)">Add</Button>
+                                                            </FieldBody>
+                                                        </Field>
+                                                        <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                                            <FieldLabel>
+                                                                Tillagda kategorier
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <Select TValue="string" @bind-SelectedValue="ProductCategory" MaxVisibleItems="5">
+                                                                    @foreach (var category in editingProduct.Categories)
+                                                                    {
+                                                                        <SelectItem>@category</SelectItem>
+                                                                    }
+                                                                </Select>
+                                                                <Button Color="Color.Danger" Margin="Margin.Is1" Clicked="() => RemoveProductCategory(editingProduct, ProductCategory)">Remove</Button>
+                                                            </FieldBody>
+                                                        </Field>
+                                                    </Fields>
+                                                    <Fields>
+                                                        <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                                            <FieldLabel>
+                                                                Utgivningsdatum
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <InputDate TValue="DateOnly?" Placeholder="New release Date" @bind-Value="@editingProduct.ReleaseDate" class="form-control" />
+                                                                <ValidationMessage For="@(() => editingProduct.ReleaseDate)" />
+
+                                                            </FieldBody>
+                                                        </Field>
+                                                        <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                                            <FieldLabel>
+                                                                Lagersaldo
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <InputNumber TValue="int" Placeholder="New stock" @bind-Value="@editingProduct.Stock" class="form-control" />
+                                                                <ValidationMessage For="@(() => editingProduct.Stock)" />
+                                                            </FieldBody>
+                                                        </Field>
+                                                    </Fields>
+                                                    <Fields>
+                                                        <Field>
+                                                            <FieldLabel>
+                                                                Fysisk produkt
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <InputCheckbox TValue="bool" @bind-Value="@editingProduct.IsPhysical" />
+                                                            </FieldBody>
+                                                        </Field>
+                                                        <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                                            <FieldLabel>
+                                                                Ålderskrav
+                                                            </FieldLabel>
+                                                            <FieldBody>
+                                                                <InputNumber TValue="int" Placeholder="New price" @bind-Value="@editingProduct.AgeRequirement" class="form-control" />
+                                                                <ValidationMessage For="@(() => editingProduct.AgeRequirement)" />
+                                                            </FieldBody>
+                                                        </Field>
+                                                    </Fields>
+                                                    <Field>
+                                                        <FieldLabel>
+                                                            Beskrivning
+                                                        </FieldLabel>
+                                                        <FieldBody>
+                                                            <InputTextArea Placeholder="New description here" @bind-Value="@editingProduct.Description" class="form-control" />
+                                                            <ValidationMessage For="@(() => editingProduct.Description)" />
+                                                        </FieldBody>
+                                                    </Field>
+
+                                                </Div>
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <Button Color="Color.Danger" Clicked="@CloseEditProductModal">Avbryt</Button>
+                                                <Button Color="Color.Success" Type="ButtonType.Submit">Uppdatera</Button>
+                                            </ModalFooter>
+                                        </ModalContent>
+                                    </ChildContent>
+                                </EditForm>
+                            </Modal>
+
+                        </Virtualize>
+                    </TableBody>
+                </Table>
+            </CardBody>
+        </Card>
+    </Div>
+
+
+
+    <Modal @ref="modalRef" Closing="@OnModalClosing">
+        <EditForm Model="CreateProductDto" FormName="CreateProductForm" OnSubmit="() => TryCloseModal()">
+            <ChildContent Context="createProductContext">
+                <DataAnnotationsValidator />
+                <ModalContent Centered Size="ModalSize.ExtraLarge">
+                    <ModalHeader style="background-color: transparent; color: black">
+                        <ModalTitle>Lägg till en ny produkt</ModalTitle>
+                    </ModalHeader>
+                    <ModalBody>
+                        <Div Margin="Margin.IsAuto.OnX" Padding="Padding.Is5.OnX" Width="Width.Is50">
+                            <Heading Size="HeadingSize.Is2" Margin="Margin.Is3.FromBottom">
+                                Lägg till en ny produkt
+                            </Heading>
+                            <Form>
+                                <Field>
+                                    <FieldLabel>
+                                        Produktnamn
+                                    </FieldLabel>
+                                    <FieldBody>
+                                        <InputTextArea Placeholder="Product name" @bind-Value="@CreateProductDto.Name" class="form-control" />
+                                        <ValidationMessage For="@(() => CreateProductDto.Name)" />
+                                    </FieldBody>
+                                </Field>
+                                <Fields>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Omslagsbild
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <InputText @bind-Value="CreateProductDto.CoverPicturePath" Placeholder="Picture path" class="form-control" />
+                                        </FieldBody>
+                                    </Field>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Pris
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <InputNumber TValue="decimal" Placeholder="Price SEK" @bind-Value="@CreateProductDto.Price" class="form-control" />
+                                            <ValidationMessage For="@(() => CreateProductDto.Price)" />
+                                        </FieldBody>
+                                    </Field>
+                                </Fields>
+                                <Fields>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Kategori
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <Select TValue="string" @bind-SelectedValue="ProductCategory" MaxVisibleItems="5">
+                                                @foreach (GameCategoriesEnum value in Enum.GetValues(typeof(GameCategoriesEnum)))
+                                                {
+                                                    <SelectItem>@value</SelectItem>
+                                                }
+                                            </Select>
+                                            <Button Color="Color.Success" Margin="Margin.Is1" Clicked="() => AddProductCategory(CreateProductDto, ProductCategory)">Add</Button>
+                                        </FieldBody>
+                                    </Field>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Tillagda kategorier
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <Select TValue="string" @bind-SelectedValue="ProductCategory" MaxVisibleItems="5">
+                                                @foreach (var category in CreateProductDto.Categories)
+                                                {
+                                                    <SelectItem>@category</SelectItem>
+                                                }
+                                            </Select>
+                                            <Button Color="Color.Danger" Margin="Margin.Is1" Clicked="() => RemoveProductCategory(CreateProductDto, ProductCategory)">Remove</Button>
+                                        </FieldBody>
+                                    </Field>
+                                </Fields>
+                                <Fields>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Utgivningsdatum
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <InputDate Placeholder="Release Date" @bind-Value="@CreateProductDto.ReleaseDate" class="form-control" />
+                                            <ValidationMessage For="@(() => CreateProductDto.ReleaseDate)" />
+                                        </FieldBody>
+                                    </Field>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Lagersaldo
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <InputNumber Placeholder="0" @bind-Value="@CreateProductDto.Stock" class="form-control" />
+                                            <ValidationMessage For="@(() => CreateProductDto.Stock)" />
+                                        </FieldBody>
+                                    </Field>
+                                </Fields>
+                                <Fields>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Fysisk produkt
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <InputCheckbox @bind-Value="@CreateProductDto.IsPhysical" />
+                                            <ValidationMessage For="@(() => CreateProductDto.IsPhysical)" />
+                                        </FieldBody>
+                                    </Field>
+                                    <Field ColumnSize="ColumnSize.IsFull.OnTablet.IsHalf.OnDesktop">
+                                        <FieldLabel>
+                                            Ålderskrav
+                                        </FieldLabel>
+                                        <FieldBody>
+                                            <InputNumber Placeholder="Age requirement" @bind-Value="@CreateProductDto.AgeRequirement" class="form-control" />
+                                            <ValidationMessage For="@(() => CreateProductDto.AgeRequirement)" />
+                                        </FieldBody>
+                                    </Field>
+                                </Fields>
+                                <Field>
+                                    <FieldLabel>
+                                        Beskrivning
+                                    </FieldLabel>
+                                    <FieldBody>
+                                        <InputTextArea Placeholder="New description here" @bind-Value="@CreateProductDto.Description" class="form-control" />
+                                        <ValidationMessage For="@(() => CreateProductDto.Description)" />
+                                    </FieldBody>
+                                </Field>
+                            </Form>
+                        </Div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button Color="Color.Danger" Clicked="@CloseModal">Avbryt</Button>
+                        <Button Color="Color.Success" Type="ButtonType.Submit">Lägg till</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </ChildContent>
+        </EditForm>
+
+    </Modal>
+
+    <Div Flex="Flex.JustifyContent.Center">
+        <Modal @bind-Visible="@deleteProductModal">
+            <ModalContent Centered>
+                <ModalHeader>
+                    <ModalTitle>Delete item</ModalTitle>
+                    <CloseButton />
+                </ModalHeader>
+                <ModalBody>
+                    <Div Flex="Flex.JustifyContent.Center.AlignItems.Center" Padding="Padding.Is3">
+                        <Icon Name="IconName.Delete" IconSize="IconSize.x3" />
+                    </Div>
+                    <Paragraph TextAlignment="TextAlignment.Center">
+                        Är du säker på att du vill ta bort den här produkten?
+                    </Paragraph>
+                </ModalBody>
+                <ModalFooter Flex="Flex.JustifyContent.Center.AlignItems.Center" Gap="Gap.Is3">
+                    <Button Color="Color.Secondary" Outline Clicked="CloseDeleteProductModal">
+                        Nej, avbryt
+                    </Button>
+                    <Button Color="Color.Danger" Clicked="(() => DeleteProduct(deleteProduct.Id))">
+                        Ja, jag är säker
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    </Div>
+
+</Container>
+

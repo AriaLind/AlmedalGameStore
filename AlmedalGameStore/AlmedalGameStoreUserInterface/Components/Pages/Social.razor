@@ -1,0 +1,105 @@
+﻿@page "/social"
+
+@* <Container>
+    <Div Margin="Margin.IsAuto.OnX" TextColor="TextColor.Primary">
+        <Div Flex="Flex.Column.AlignItems.Center" Margin="Margin.IsAuto.OnX" Width="Width.Is50" TextAlignment="TextAlignment.Center">
+
+            <Heading Class="neonText" Style="text-align:center">
+                BLI MEDLEM FÖR ATT GÅ MED I VÅR DISCORD
+            </Heading>
+            <iframe src="https://discordapp.com/widget?id=1229361047950069761&theme=dark" width="700" height="800" AlternateText="AlmedalGameStoreLogo.png" Rounded/>
+
+        </Div>
+    </Div>
+</Container> *@
+
+<CardDeck Style="text-align:center" Class="mt-5">
+    
+        <AuthorizeView>
+            <Authorized>
+                <Div class="col-6 col-lg-2"></Div>
+                <Div Class="col-8 container-discord">
+                    <Div Class="d-flex align-content-center">
+                        <iframe src="https://discordapp.com/widget?id=1229361047950069761&theme=dark" width="813" height="400" AlternateText="AlmedalGameStoreLogo.png" Rounded/>
+                        @* <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light" class="align-content-center">
+                            Välkommen att joina vår Discord
+                        </Paragraph> *@
+                    </Div>
+                </Div>
+
+            </Authorized>
+            <NotAuthorized>
+                <Card ElementId="social-card">
+                    <Div Class="card-content align-content-center mt-5" style="height:50vh;">
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Få bra erbjudanden
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Se dina köpta spel
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Ta del av vår Discord
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Få nyhetsbrev om spel
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Få nyhetsbrev om event
+                        </Paragraph>
+                    </Div>
+                    <Div Class="button-container">
+                        <Button id="medlemsknapp" Color="Color.Dark" Size="Size.Medium" To="/Account/Register" Type="ButtonType.Link" Class="m-5">
+                            <Heading Class="my-3">
+                                Bli medlem
+                            </Heading>
+                        </Button>
+                    </Div>
+                </Card>
+
+                <Card ElementId="social-card">
+                    <Div Class="card-content align-content-center mt-5 " style="height:50vh;">
+                    <Image Source="https://almedalstorage.blob.core.windows.net/almedalblob/almedallogo.png"></Image>
+                    </Div>
+                    <Div Class="button-container">
+                        <Button id="medlemsknapp" Color="Color.Dark" Size="Size.Medium" To="/Account/Login" Type="ButtonType.Link" Class="m-5">
+                            <Heading Class="my-3">
+                                Logga in
+                            </Heading>
+                        </Button>
+                    </Div>
+                </Card>
+                <Card ElementId="social-card">
+                <Div Class="card-content align-content-center mt-5" style="height:50vh;">
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Anslut till vårat community
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Ta del av flera olika servrar
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Chatta med nya vänner
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Chatta med bekanta vänner
+                        </Paragraph>
+                        <Paragraph TextSize="TextSize.Heading4" TextWeight="TextWeight.Bold" TextColor="TextColor.Light">
+                            Spela tillsammans på våra event
+                        </Paragraph>
+                    </Div>
+                    <Div Class="button-container">
+                        <Button id="medlemsknapp" Color="Color.Dark" Size="Size.Medium" To="/Account/Login" Type="ButtonType.Link" Class="m-5">
+                            <Heading Class="my-3">
+                                Joina vår Discord
+                            </Heading>
+                        </Button>
+                    </Div>
+                </Card>
+
+            </NotAuthorized>
+        </AuthorizeView>
+</CardDeck>
+
+
+@code {
+
+}

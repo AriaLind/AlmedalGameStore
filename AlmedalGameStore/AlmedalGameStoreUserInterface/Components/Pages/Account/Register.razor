@@ -1,0 +1,96 @@
+﻿@page "/Account/Register"
+@rendermode InteractiveServer
+@using AlmedalGameStoreShared.Dtos.Auth
+@using AlmedalGameStoreUserInterface.Auth
+@using Blazorise.LoadingIndicator
+
+@inject IHttpClientFactory HttpClientFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthService AuthService
+
+<LoadingIndicator FullScreen FadeIn @ref="loadingIndicator">
+    <Container>
+        <Div Margin="Margin.IsAuto.OnX" Width="Width.Is50" Style="margin-top:5%;">
+            <Card Shadow="Shadow.Default">
+                <CardBody>
+                    <Heading Size="HeadingSize.Is2" Margin="Margin.Is3.FromBottom" TextAlignment="TextAlignment.Center">
+                        Skapa konto
+                    </Heading>
+                    <EditForm Model="UserRegisterDto" FormName="RegisterForm" OnValidSubmit="RegisterAccount">
+                        <DataAnnotationsValidator/>
+
+                        <Field>
+                            <FieldLabel>
+                                Din Epost
+                            </FieldLabel>
+                            <FieldBody>
+                                <InputText @bind-Value="UserRegisterDto.Email" Placeholder="namn@epost.com" type="email" class="form-control"/>
+                                <ValidationMessage For="@(() => UserRegisterDto.Email)"/>
+                            </FieldBody>
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>
+                                Lösenord
+                            </FieldLabel>
+                            <FieldBody>
+                                <InputText @bind-Value="UserRegisterDto.Password" Placeholder="********" type="password" autocomplete="new-password" class="form-control"/>
+                                <ValidationMessage For="@(() => UserRegisterDto.Password)"/>
+                            </FieldBody>
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>
+                                Bekräfta Lösenord
+                            </FieldLabel>
+                            <FieldBody>
+                                <InputText @bind-Value="UserRegisterDto.ConfirmPassword" Placeholder="********" type="password" autocomplete="new-password" class="form-control"/>
+                                <ValidationMessage For="@(() => UserRegisterDto.ConfirmPassword)"/>
+                            </FieldBody>
+                        </Field>
+
+                        <Field Margin="Margin.Is3">
+                            <InputCheckbox @bind-Value="UserRegisterDto.AgreedToTerms" TValue="bool" Class="form-check-input"/>
+                            <label class="form-check-label">
+                                Jag accepterar <Anchor To="/magnus" TextColor="TextColor.Primary">Användarvillkoren</Anchor>
+                            </label>
+                            <ValidationMessage For="@(() => UserRegisterDto.AgreedToTerms)"/>
+                        </Field>
+
+                        <Field>
+                            <button class="btn btn-primary" type="submit" Block>
+                                Skapa konto
+                            </button>
+                        </Field>
+
+                        <Field>
+                            Har du redan ett konto? <Anchor To="account/login" TextColor="TextColor.Primary">Logga in</Anchor>
+                        </Field>
+                    </EditForm>
+
+                </CardBody>
+            </Card>
+        </Div>
+    </Container>
+</LoadingIndicator>
+
+
+@code {
+
+    public UserRegisterDto UserRegisterDto { get; set; } = new();
+
+    [CascadingParameter]
+    LoadingIndicator loadingIndicator { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    }
+
+    private async Task RegisterAccount()
+    {
+        await loadingIndicator.Show();
+        await AuthService.RegisterAsync(UserRegisterDto);
+        await loadingIndicator.Hide();
+    }        
+}

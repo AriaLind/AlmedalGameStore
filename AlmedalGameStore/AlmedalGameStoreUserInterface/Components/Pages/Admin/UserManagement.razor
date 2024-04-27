@@ -1,0 +1,28 @@
+﻿@page "/Admin/UserManagement"
+@using Microsoft.AspNetCore.Authorization
+@using AlmedalGameStoreUserInterface.Auth
+@using AlmedalGameStoreUserInterface.Services
+@using System.Security.Claims
+@using AlmedalGameStoreShared.Dtos.Users
+@inject IHttpClientFactory _httpClientFactory
+@rendermode InteractiveServer
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 style="color:white">Customer accounts</h1>
+<Virtualize Items="@Users" OverscanCount="50">
+	<div class="card mb-3">
+		<div class="card-body">
+			<div class="row">
+				<div class="col">
+					<h5 class="card-title">Customer username: @context.UserName</h5>
+					<p class="card-text">Customer id: @context.Id</p>
+					<p class="card-text">Customer e-mail: @context.Email</p>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</Virtualize>
+
+

@@ -1,0 +1,26 @@
+﻿@page "/error/403Forbidden"
+
+@rendermode InteractiveServer
+
+<head>
+    <link href="403Forbidden.css" rel="stylesheet" />
+</head>
+
+
+<div id="app">
+    <div>403</div>
+    <div class="txt">
+        Forbidden<span class="blink">_</span>
+    </div>
+    <div class="txt">
+        <a href="/account/register" style="font-size: 14px;">Skapa konto</a>
+    </div>
+    <div class="txt">
+        <a href="/" style="font-size: 14px;">Tillbaka hem</a>
+    </div>
+
+    <div style="padding: 10px;">
+        <audio id="audioPlayer" controls><source src="https://almedalstorage.blob.core.windows.net/almedalblob/almedalgamestoresong.mp3" /></audio>
+    </div>
+
+</div>

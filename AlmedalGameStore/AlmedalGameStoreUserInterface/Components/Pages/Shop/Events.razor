@@ -1,0 +1,102 @@
+﻿@page "/events"
+
+@rendermode InteractiveServer
+<h2 style="text-align:center" class="neonText">EVENT</h2>
+
+<div class="row d-flex justify-content-center" style="margin-top: 1%;">
+    <Virtualize Items="@allEvents">
+        <div class="card col-5 m-4" style="width: 18rem; border-radius: 45px; background: linear-gradient(to bottom right, #2196F3, #A020F0);" id="custom-card">
+            <img src="@context.CoverPicturePath" class="card-img-top mt-3" alt="..." style="width: 100%; height: 400px; object-fit: cover; border-radius: 45px;">
+            <div class="card-body">
+                <h5 class="card-title text-light">@context.Name</h5>
+                <h5 class="text-light">@context.Price kr</h5>
+            </div>
+
+            <div class="text-center d-flex justify-content-between mx-3 mb-4">
+                <button class="btn btn-primary btn-lg" style="background-color: darkblue; border-color: black; border-radius: 8px;" @onclick="@(() => ShowModal(@context))" id="(@context.Name)InfoButton">Info</button>
+                @if (@context.Stock > 0)
+                {
+                    <button class="btn btn-success btn-lgt" style="background-color: deeppink; border-color: black; border-radius: 8px;" @onclick="@(() => AddToCart(@context))" id="(@context.Name)ProductButton">Köp</button>
+                }
+                else
+                {
+                    <button class="btn btn-warning btn-lg" style="background-color: #FFC107; border-color: black; border-radius: 8px;" disabled>Slut på lager</button>
+                }
+            </div>
+        </div>
+    
+
+
+
+        <div class="modal" tabindex="-1" style="display: @(showModal ? "block" : "none")">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-3 col-lg-3">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d68279.52177953403!2d11.887637522591202!3d57.66998727467427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x464ff369d0835015%3A0xba46082e9c214f49!2sIT-H%C3%B6gskolan!5e0!3m2!1sen!2sse!4v1713358689998!5m2!1sen!2sse" width="425" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                            <div class="col-12 col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h2 class="card-title">@chosenProduct.Name</h2>
+                                        <p class="card-text">@chosenProduct.Description</p>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">Pris: @chosenProduct.Price kr</li>
+                                        <li class="list-group-item">Åldersgräns: @chosenProduct.AgeRequirement</li>
+                                        <li class="list-group-item">Utgivningsdatum: @chosenProduct.ReleaseDate</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between mx-2 ">
+                        <button class="col-3 btn btn-lg btn-danger m-3 rounded-pill" id="CloseModalButton" @onclick="@(() => CloseModal())">Stäng</button>
+                        @if (@chosenProduct.Stock > 0)
+                        {
+                            <button class="col-3 btn btn-lg btn-success m-3 rounded-pill" id="ChosenProductButton" @onclick="@(() => AddToCartModal(@chosenProduct))">Köp</button>
+                        }
+                        else
+                        {
+                            <button class="col-3 btn btn-warning m-3 rounded-pill" disabled>Slut på lager</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Virtualize>
+    <!--Test pipeline -->
+</div>
+
+<Div Flex="Flex.JustifyContent.Center">
+    <Modal @bind-Visible="@addedToCartModal">
+        <ModalContent Centered>
+            <ModalBody>
+                <Div Flex="Flex.JustifyContent.Center.AlignItems.Center" Padding="Padding.Is3">
+                    <Icon Name="IconName.CheckCircle" IconSize="IconSize.x3" TextColor="TextColor.Success" />
+                </Div>
+                <Paragraph TextAlignment="TextAlignment.Center" TextWeight="TextWeight.Bold">
+                    Produkten tillagd i kundvagnen!
+                </Paragraph>
+            </ModalBody>
+            <ModalFooter Flex="Flex.JustifyContent.Center.AlignItems.Center" Gap="Gap.Is3">
+                <Button id="continueButtonForEvent" Color="Color.Primary" Clicked="@ToggleAddedToCartModal">
+                    Fortsätt
+                </Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
+</Div>
+
+<style>
+    .card:hover {
+        transform: scale(1.06);
+        transition: transform 0.7s ease;
+    }
+
+    .card {
+        box-shadow: 0 4px 80px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+</style>

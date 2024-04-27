@@ -1,0 +1,105 @@
+﻿@page "/info/FAQ"
+@rendermode InteractiveServer
+
+<Container>
+    <Div Margin="Margin.IsAuto.OnX">
+        <Div Margin="Margin.Is5.FromBottom" TextAlignment="TextAlignment.Center">
+            <Heading Size="HeadingSize.Is2" TextWeight="TextWeight.Bold">
+                Frequently Asked Questions
+            </Heading>
+        </Div>
+        <Div>
+            <Row>
+                <Column ColumnSize="ColumnSize.IsHalf" Padding="Padding.Is4.FromBottom">
+                    <Heading Size="HeadingSize.Is3" TextSize="TextSize.Heading4" TextWeight="TextWeight.Normal">
+                        Hur kan jag skapa ett konto på er webbplats?
+                    </Heading>
+                    <Paragraph>
+                        För att skapa ett konto på vår webbplats, klicka på "Registrera" eller "Skapa konto" och följ instruktionerna för att fylla i din information.
+                    </Paragraph>
+                </Column>
+                <Column ColumnSize="ColumnSize.IsHalf" Padding="Padding.Is4.FromBottom">
+                    <Heading Size="HeadingSize.Is3" TextSize="TextSize.Heading4" TextWeight="TextWeight.Normal">
+                        Hur lång tid tar det för mina spel att levereras?
+                    </Heading>
+                    <Paragraph>
+                        Leveranstiden för dina spel kan variera beroende på din plats och det valda leveransalternativet. Normalt sett strävar vi efter att leverera dina spel inom [ange antal arbetsdagar].
+                    </Paragraph>
+                </Column>
+                <Column ColumnSize="ColumnSize.IsHalf" Padding="Padding.Is4.FromBottom">
+                    <Heading Size="HeadingSize.Is3" TextSize="TextSize.Heading4" TextWeight="TextWeight.Normal">
+                        Kan jag returnera eller byta ett spel om jag inte är nöjd?
+                    </Heading>
+                    <Paragraph>
+                        Ja, vi erbjuder en retur- eller bytespolicy för spel som inte uppfyller dina förväntningar. Vänligen läs vår returpolicy för mer information om hur du returnerar eller byter ett spel.
+                    </Paragraph>
+                </Column>
+                <Column ColumnSize="ColumnSize.IsHalf" Padding="Padding.Is4.FromBottom">
+                    <Heading Size="HeadingSize.Is3" TextSize="TextSize.Heading4" TextWeight="TextWeight.Normal">
+                        Hur kan jag kontakta er kundtjänst om jag har frågor eller problem?
+                    </Heading>
+                    <Paragraph>
+                        Du kan kontakta vår kundtjänst via e-post på [ange e-postadress] eller genom att fylla i kontaktformuläret på vår webbplats. Vi strävar efter att svara på alla förfrågningar så snabbt som möjligt.
+                    </Paragraph>
+                </Column>
+                <Column ColumnSize="ColumnSize.IsHalf">
+                    <Heading Size="HeadingSize.Is3" TextSize="TextSize.Heading4" TextWeight="TextWeight.Normal">
+                        Kan jag förhandsbeställa kommande spel från er?
+                    </Heading>
+                    <Paragraph>
+                        Absolut, vi erbjuder ofta förhandsbokningar för kommande spel. Se till att prenumerera på vårt nyhetsbrev eller följ oss på sociala medier för att få uppdateringar om kommande titlar och förhandsbokningsmöjligheter.
+                    </Paragraph>
+                </Column>
+                <Column ColumnSize="ColumnSize.IsHalf">
+                    <Heading Size="HeadingSize.Is3" TextSize="TextSize.Heading4" TextWeight="TextWeight.Normal">
+                        Vad är er policy för digitala nedladdningar och DRM?
+                    </Heading>
+                    <Paragraph>
+                        Vi strävar efter att erbjuda digitala nedladdningar på ett smidigt sätt. Våra digitala produkter kan levereras med olika typer av DRM (Digital Rights Management), beroende på utgivarens krav. Mer information om specifika DRM-bestämmelser finns vanligtvis på produktsidan.
+                    </Paragraph>
+                </Column>
+            </Row>
+        </Div>
+    </Div>
+</Container>
+<Container Padding="Padding.Is5">
+    <Div Margin="Margin.IsAuto.OnX" Padding="Padding.Is5.OnX" Width="Width.Is75">
+        <Heading Size="HeadingSize.Is2" Margin="Margin.Is3.FromBottom" TextAlignment="TextAlignment.Center">
+            Kontakta oss
+        </Heading>
+        <Paragraph Margin="Margin.Is3.FromBottom" TextAlignment="TextAlignment.Center">
+            Har du fortfarande frågor eller behöver ytterligare hjälp? Kontakta oss genom formuläret nedan.
+        </Paragraph>
+        <Form>
+            <Field>
+                <FieldLabel>
+                    Din e-postadress
+                </FieldLabel>
+                <FieldBody>
+                    <TextEdit Placeholder="namn@epost.com" />
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel>
+                    Ämne
+                </FieldLabel>
+                <FieldBody>
+                    <TextEdit Placeholder="Vad gäller det?" />
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel>
+                    Meddelade
+                </FieldLabel>
+                <FieldBody>
+                    <MemoEdit Placeholder="Skicka ett meddelande..." Rows="5" />
+                </FieldBody>
+            </Field>
+            <Field TextAlignment="TextAlignment.Center">
+                <Button Color="Color.Primary">
+                    Skicka meddelande
+                </Button>
+            </Field>
+        </Form>
+    </Div>
+</Container>

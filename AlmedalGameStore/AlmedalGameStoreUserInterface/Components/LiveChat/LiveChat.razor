@@ -1,0 +1,126 @@
+﻿@page "/liveChat"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.Authorization
+@using AlmedalGameStoreDataAccess.UnitsOfWork
+@using AlmedalGameStoreShared.Dtos.Users
+@using System.Text.RegularExpressions
+@inject NavigationManager Navigation
+@implements IAsyncDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpClientFactory HttpClientFactory
+@inject SqlUnitOfWork SqlUnitOfWork
+
+@attribute [Authorize]
+
+<Container style="display: flex; flex-direction: column; height: 75vh;">
+    <Card style="flex: 1;">
+        <CardBody style="display: flex; flex-direction: column; height: 100%;">
+            <CardBody style="overflow-y: auto; max-height: 60vh;">
+                <Repeater Items="@messages.AsEnumerable().Reverse()">
+                    @if (context.StartsWith(userName + ":"))
+                    {
+                        @MyMessage(context, userName)
+                    }
+                    else
+                    {
+                        @ReceivedMessage(context, userName)
+                    }
+                </Repeater>
+            </CardBody>
+            <Row>
+                <Column ColumnSize="ColumnSize.Is11">
+                    <InputText @bind-Value="messageInput" Placeholder="Meddelande" class="form-control" />
+                </Column>
+                <Column ColumnSize="ColumnSize.Is1">
+                    <Button Color="Color.Success" Clicked="Send" Disabled="@(!IsConnected || timeOut)">Skicka</Button>
+                </Column>
+            </Row>
+        </CardBody>
+    </Card>
+</Container>
+
+
+@code {
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+    private bool timeOut = false;
+    private string? userName;
+    private string? messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var httpClient = HttpClientFactory.CreateClient("AlmedalGameStoreSqlApi");
+        
+        var key = await SqlUnitOfWork.AuthKeyRepository.GetByNameAsync("SqlApi");
+
+        if (!httpClient.DefaultRequestHeaders.Contains("X-Api-Key"))
+        {
+            httpClient.DefaultRequestHeaders.Add("X-Api-Key", key.Key);
+        }
+
+        var response = await httpClient.GetAsync($"users/{state.User.Identity.Name}");
+        var user = await response.Content.ReadFromJsonAsync<SingleUser>();
+
+        userName = user.User.UserName;
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var encodedMsg = $"{user}: {message}";
+            messages.Add(encodedMsg);
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task Send()
+    {
+        if (messageInput.Length < 0)
+        {
+            return;
+        }
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMessage", userName, messageInput);
+            messageInput = string.Empty;
+            timeOut = true;
+            await Task.Delay(1000);
+            timeOut = false;
+        }
+    }
+
+    public bool IsConnected =>
+        hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
+    private RenderFragment MyMessage(string message, string messageSender) => __builder =>
+    {
+        <Column>
+            <Text TextSize="TextSize.Default" TextColor="TextColor.Info">@(DateTime.Now.ToString("T")) </Text>
+            <Text TextSize="TextSize.Medium" TextColor="TextColor.Success">@message</Text>
+            <br/>
+        </Column>
+    };
+
+    private RenderFragment ReceivedMessage(string message, string messageSender) => __builder =>
+    {
+        <Column>
+            <Text TextSize="TextSize.Default" TextColor="TextColor.Info">@(DateTime.Now.ToString("T")) </Text>
+            <Text TextSize="TextSize.Medium" TextColor="TextColor.Primary">@message</Text>
+            <br />
+        </Column>
+    };
+}

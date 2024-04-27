@@ -1,0 +1,189 @@
+﻿@page "/products"
+
+
+@rendermode InteractiveServer
+<Div>
+	<Row>
+		<Div class="col-md-4 justify-content-center d-flex">
+            @* <h2  class="neonText">PRODUKTER</h2> *@
+            <Field Display="Display.InlineFlex" Margin="Margin.Is0.FromBottom">
+                <TextEdit Placeholder="Sök produkt" @bind-Text="SearchQuery"/>
+            </Field>
+		</Div>
+		<Div class="col-md-4 mt-3 justify-content-center d-flex">
+			
+		</Div>
+		<Div class="col-md-4 mt-3 d-flex justify-content-center" >
+			<Dropdown class="mr-2" id="sortera">
+				<DropdownToggle style="background-color: darkblue" class="neonText">
+					Sortera
+				</DropdownToggle>
+				<DropdownMenu Placement="Placement.BottomStart" style="background-color: darkblue" >
+					@foreach (var option in sortingOptions)
+					{
+						<DropdownItem class="neonText" @onclick="() => SortProducts(option)">@option</DropdownItem>
+					}
+				</DropdownMenu>
+			</Dropdown>
+			<Dropdown class="mr-2" id="högstÅlder">
+				<DropdownToggle style="background-color: darkblue" class="neonText">
+					Högsta ålder
+				</DropdownToggle>
+				<DropdownMenu style="background-color: darkblue">
+					@foreach (var age in filterAgeOptions)
+					{
+						<DropdownItem class="neonText" @onclick="() => FilterAgeProducts(age)">@age</DropdownItem>
+					}
+				</DropdownMenu>
+			</Dropdown>
+			<Dropdown id="genre">
+				<DropdownToggle style="background-color: darkblue" class="neonText">
+					Genre
+				</DropdownToggle>
+				<DropdownMenu style="background-color: darkblue">
+					@foreach (var category in filterGenreOptions)
+					{
+						<DropdownItem class="neonText" @onclick="() => FilterGenreProducts(category)">@category</DropdownItem>
+					}
+				</DropdownMenu>
+			</Dropdown>
+		</Div>
+	</Row>
+
+
+	
+    <div class="row d-flex justify-content-center">
+        <Virtualize Items="@filteredProducts">
+            <div class="card customCard col-8 col-md-5 col-lg-2 m-4 p-0" style="border-radius: 18px; background: linear-gradient(to bottom right, #A020F0, #2196F3);  border-color:black" id="custom-card">
+                <div class="card-img-container" style="width: 100%; border-radius: 18px;">
+                    <img src="@context.CoverPicturePath" class="card-img-top custom-img" alt="..." style="width: 100%; height: 30vh; object-fit: cover;">
+                </div>
+
+                <div class="my-2 mx-3">
+                    <h5 class="card-title text-light">@context.Name</h5>
+                    <h5 id="(@context.Name)Priceh5" class="text-light">@context.Price kr</h5>
+                </div>
+
+                <div class="text-center d-flex justify-content-between mx-3 mb-4">
+                    <button class="btn btn-primary btn-lg" style="background-color: darkblue; border-color:black; border-radius: 8px;" @onclick="@(() => ShowModal(@context))" id="(@context.Name)InfoButton">Info</button>
+                    @if (@context.Stock > 0)
+                    {
+                        <button class="btn btn-success btn-lg t" style="background-color: deeppink; border-color: black; border-radius: 8px;" @onclick="@(() => AddToCart(@context))" id="(@context.Name)ProductButton">Köp</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-warning btn-lg" style="background-color: #FFC107; border-color: #black; border-radius: 8px;" disabled>Slut på lager</button>
+                    }
+
+                </div>
+            </div>
+       
+             
+
+            <div class="modal" tabindex="-1" style="display: @(showModal ? "block" : "none")">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="background: linear-gradient(to bottom right, #2196F3, #A020F0);">
+                        <div class="modal-body" >
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <img src="@chosenProduct.CoverPicturePath" class="card-img-top" style="">
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h2 class="card-title">@chosenProduct.Name</h2>
+                                            <p class="card-text">@chosenProduct.Description</p>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Pris: @chosenProduct.Price kr</li>
+                                            <li class="list-group-item">Åldersgräns: @chosenProduct.AgeRequirement</li>
+                                            <li class="list-group-item">Utgivningsdatum: @chosenProduct.ReleaseDate</li>
+
+                                        </ul>
+
+                                        @if (@chosenProduct.IsPhysical == false)
+                                        {
+                                            <li class="list-group-item">Digital produkt</li>
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item">Fysisk produkt</li>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-between mx-2 ">
+	                        <button class="col-3 btn btn-lg btn-danger m-3 rounded-pill" id="CloseModalButton" @onclick="@(() => CloseModal())">Stäng</button>
+	                        @if (@chosenProduct.Stock > 0)
+	                        {
+		                        <button class="col-3 btn btn-lg btn-success m-3 rounded-pill" id="ChosenProductButton" @onclick="@(() => AddToCartModal(@chosenProduct))">Köp</button>
+	                        }
+	                        else
+	                        {
+		                        <button class="col-3 btn btn-warning m-3 rounded-pill" disabled>Slut på lager</button>
+	                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Virtualize>
+	</div>
+	<!--Test pipeline -->
+
+
+	<Div Flex="Flex.JustifyContent.Center">
+		<Modal @bind-Visible="@addedToCartModal">
+			<ModalContent Centered>
+				<ModalBody>
+					<Div Flex="Flex.JustifyContent.Center.AlignItems.Center" Padding="Padding.Is3">
+						<Icon Name="IconName.CheckCircle" IconSize="IconSize.x3" TextColor="TextColor.Success"/>
+					</Div>
+					<Paragraph TextAlignment="TextAlignment.Center" TextWeight="TextWeight.Bold">
+						Produkten tillagd i kundvagnen!
+					</Paragraph>
+				</ModalBody>
+				<ModalFooter Flex="Flex.JustifyContent.Center.AlignItems.Center" Gap="Gap.Is3">
+					<Button id="continueButton" Color="Color.Primary" Clicked="@ToggleAddedToCartModal">
+						Fortsätt
+					</Button>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
+	</Div>
+
+
+</Div>
+
+
+
+<style>
+    .card:hover {
+        transform: scale(1.06);
+        transition: transform 0.7s ease;
+    }
+
+    .card {
+        box-shadow: 0 4px 80px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+    .container {
+        position: relative;
+    }
+
+    .select {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1; /* Ensure it appears above the product cards */
+    }
+	/* Lägg till marginaler på Dropdown-menyer */
+	.dropdown-menu {
+		margin-right: 10px; /* Justera högermarginalen */
+		margin-left: 10px; /* Justera vänstermarginalen */
+	}
+
+
+</style>

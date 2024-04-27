@@ -1,0 +1,198 @@
+﻿@page "/Checkout"
+
+@rendermode InteractiveServer
+
+<div class="container">
+    <div class="py-5 text-center">
+        <h2 style="color:whit" class="neonText">Utcheckning</h2>
+    </div>
+    <div class="row">
+        
+        <div class="col-md-4 order-md-2 mb-4">
+            <Card>
+                <CardBody>
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Din kundvagn</span>
+                        <span class="badge badge-secondary badge-pill">@activeShoppingCartService.activeCart.ProductDtoList.Count</span>
+                    </h4>
+                    <ul class="list-group mb-3 sticky-top">
+
+                        <Virtualize Items="activeShoppingCartService.UniqueCartProductDtos">
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0">@context.Name</h6>
+                                    <small class="text-muted">Amount: @activeShoppingCartService.CountQuantity(context)</small>
+                                </div>
+                                <span class="text-muted">(@activeShoppingCartService.CountQuantity(context) * @context.Price) kr</span>
+                            </li>
+                        </Virtualize>
+                        @* Promo codes i framtiden? *@
+                        @if (ValidPromoCodeUsed)
+                        {
+                            @PromoCodesFragment()
+                        }
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total (kr)</span>
+                            <strong>@TotalCost</strong>
+                        </li>
+                    </ul>
+                    <EditForm Model="_promoCodeModel" FormName="PromoCodeForm" class="card p-2" OnValidSubmit="() => CheckPromoCode(_promoCodeModel.PromoCode)">
+                        <div class="input-group">
+                            <InputText type="text" class="form-control" placeholder="Kampanjkod" @bind-Value="_promoCodeModel.PromoCode" />
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-secondary">Aktivera</button>
+                            </div>
+                        </div>
+                    </EditForm>
+                </CardBody>
+            </Card>
+            
+        </div>
+        <div class="col-md-8 order-md-1">
+            <div class="d-block my-3">
+                <Card>
+                    <CardBody>
+                        <InputRadioGroup @bind-Value="CheckoutModel.Payment.Type">
+                            <div class="custom-control custom-radio">
+                                <InputRadio Value="@("Kreditkort")" id="credit" class="custom-control-input"></InputRadio>
+                                <label class="custom-control-label" for="credit">Kreditkort</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <InputRadio Value="@("Betalkort")" id="debit" class="custom-control-input"></InputRadio>
+                                <label class="custom-control-label" for="debit">Betalkort</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <InputRadio Value="@("Klarna")" id="klarna" class="custom-control-input"></InputRadio>
+                                <label class="custom-control-label" for="klarna">Klarna</label>
+                            </div>
+                        </InputRadioGroup>
+                    </CardBody>
+                </Card>
+            </div>
+
+            @if (CheckoutModel.Payment.Type == "Klarna")
+            {
+                <div class="row">
+                    <hr class="mb-4">
+                    <klarna-express-button class="btn btn-lg btn-block"
+                                           data-locale="sv-SE"
+                                           data-theme="default"
+                                           data-id="YourMerchantID"
+                                           data-environment="playground"
+                                           async></klarna-express-button>
+                </div>
+                <script src="https://x.klarnacdn.net/express-button/v1/lib.js"
+                        data-id="klarnaBtn"
+                        data-environment="playground"
+                        async></script>
+                <script>
+                    window.klarnaExpressButtonAsyncCallback = function () {
+                        Klarna.ExpressButton.on('user-authenticated', async function (callbackData) {
+                            // Call the C# method asynchronously and await its completion
+                            await DotNet.invokeMethodAsync('AlmedalGameStoreUserInterface', 'OnUserAuthenticated', callbackData);
+                        });
+                    }
+                </script>
+            }
+
+            @if (CheckoutModel.Payment.Type == "Kreditkort" || CheckoutModel.Payment.Type == "Betalkort")
+            {
+                <Card>
+                    <CardBody>
+                        <h4 class="mb-3">Faktureringsadress</h4>
+                        <EditForm FormName="CheckoutForm" Model="CheckoutModel" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator/>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName">Förnamn</label>
+                                    <InputText id="firstName" @bind-Value="CheckoutModel.FirstName" class="form-control" placeholder="Johan"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.FirstName)" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName">Efternamn</label>
+                                    <InputText id="lastName" @bind-Value="CheckoutModel.LastName" class="form-control" placeholder="Andersson"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.LastName)" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email">Email</label>
+                                <InputText id="email" @bind-Value="CheckoutModel.Email" class="form-control" placeholder="Email"></InputText>
+                                <ValidationMessage For="@(() => CheckoutModel.Email)" />
+                            </div>
+                            <div class="mb-3">
+                                <label>Adress</label>
+                                <InputText id="address" @bind-Value="CheckoutModel.Address" class="form-control" placeholder="Storgatan 1"></InputText>
+                                <ValidationMessage For="@(() => CheckoutModel.Address)" />
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <label>Stad</label>
+                                    <InputText id="city" @bind-Value="CheckoutModel.City" class="form-control" placeholder="Göteborg"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.City)" />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="zip">Postkod</label>
+                                    <InputText id="zip" @bind-Value="CheckoutModel.ZipCode" placeholder="111 22" class="form-control"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.ZipCode)" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="Phonenumber">Telefonnummer</label>
+                                    <InputText id="Phonenumber" @bind-Value="CheckoutModel.PhoneNumber" class="form-control" placeholder="031-123 45 67"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.PhoneNumber)" />
+                                </div>
+                            </div>
+                            <hr class="mb-4">
+                            <div class="custom-control custom-checkbox">
+                                <InputCheckbox @bind-Value="CheckoutModel.GetNews" class="custom-control-input" id="same-address"></InputCheckbox>
+                                <label class="custom-control-label" for="same-address">Jag vill få nyheter om framtida erbjudanden.</label>
+                            </div>
+                            <hr class="mb-4">
+                            <h4 class="mb-3">Betalning</h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="cc-name">Namn på kortet</label>
+                                    <InputText id="cc-name" @bind-Value="CheckoutModel.NameOnCard" class="form-control" placeholder="Johan Andersson"></InputText>
+                                    <small class="text-muted">Full name as displayed on card</small>
+                                    <ValidationMessage For="@(() => CheckoutModel.NameOnCard)" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cc-name">Kortnummer</label>
+                                    <InputText id="cc-name" @bind-Value="CheckoutModel.CardNumber" class="form-control" placeholder="1234 5678 1234 5678"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.CardNumber)" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label for="cc-expiration">Utgångsdatum</label>
+                                    <InputText id="cc-expiration" @bind-Value="CheckoutModel.ExpiryDate" class="form-control" placeholder="MM/YY"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.ExpiryDate)"/>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="cc-cvv">CVV</label>
+                                    <InputText id="cc-cvv" @bind-Value="CheckoutModel.CVV" class="form-control" placeholder="123"></InputText>
+                                    <ValidationMessage For="@(() => CheckoutModel.CVV)"/>
+                                </div>
+                            </div>
+                            <hr class="mb-4">
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">Betala</button>
+                        </EditForm>
+                    </CardBody>
+                </Card>
+            }
+
+
+        </div>
+    </div>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">© 2017-2019 Almedal Game Store</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#">Privacy</a></li>
+            <li class="list-inline-item"><a href="#">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Support</a></li>
+        </ul>
+    </footer>
+</div>
+
+
+

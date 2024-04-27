@@ -1,0 +1,127 @@
+﻿h1, h2, h3, h4, h5, h6, p {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    background-color: #e1f1fd;
+}
+
+#custom-card {
+    background-color: #c1d8f0;
+}
+
+#social-card {
+    background-color: #1e2124;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.container-discord {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.card-content {
+    flex-grow: 1;
+}
+
+.button-container {
+    margin-top: auto;
+}
+
+    .button-container button {
+        margin: 5px;
+    }
+
+.card-img-container {
+    border-top-left-radius: 45px;
+    border-top-right-radius: 45px;
+    overflow: hidden;
+    width: 100%; /* Ensure the container spans the full width of the card */
+}
+
+
+
+
+#custom-nav {
+    background-color: #2a1e80;
+}
+
+#custom-footer {
+    background-color: #ff09ee;
+}
+
+.neonText {
+    color: white;
+    text-shadow: 0 0 7px blue, 0 0 10px blue, 0 0 21px blue, 0 0 42px blue, 0 0 82px blue, 0 0 92px blue, 0 0 102px blue, 0 0 151px blue;
+}
+.nav-link.active {
+    color: white !important;
+}
+
+
+/* Add CSS for card styles */
+.customCard:hover {
+    transform: scale(1.06);
+    transition: transform 0.7s ease;
+    color: white;
+}
+
+.customCard {
+    box-shadow: 0 4px 80px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.logo-flicker {
+    animation: flicker 4s infinite alternate;
+}
+
+/* Flickering animation */
+@keyframes flicker {
+
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow: 0 0 4px blue, 0 0 11px blue, 0 0 19px blue, 0 0 40px blue, 0 0 80px blue, 0 0 90px blue, 0 0 100px blue, 0 0 150px blue;
+    }
+
+    20%, 24%, 55% {
+        text-shadow: none;
+    }
+}
+
+.custom-img {
+    border-radius: 0; /* Remove rounded corners */
+}
+.neonText:hover {
+    /* Add your desired hover styles here */
+    /* For example, change the color or add a glow effect */
+    color: white; /* Neon pink color */
+}
+
+
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+
+@keyframes blink {
+    0% {
+        opacity: 0
+    }
+
+    49% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+

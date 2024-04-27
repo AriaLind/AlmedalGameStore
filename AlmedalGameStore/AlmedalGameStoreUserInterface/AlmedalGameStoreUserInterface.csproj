@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\CustomComponents\**" />
+    <Content Remove="Components\CustomComponents\**" />
+    <EmbeddedResource Remove="Components\CustomComponents\**" />
+    <None Remove="Components\CustomComponents\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazorise.Animate" Version="1.5.2" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.5.2" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.5.2" />
+    <PackageReference Include="Blazorise.LoadingIndicator" Version="1.5.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AlmedalGameStoreMongoDbApi\AlmedalGameStoreMongoDbApi.csproj" />
+    <ProjectReference Include="..\AlmedalGameStoreShared\AlmedalGameStoreShared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\TestComponent.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\Account\EditProfile.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Admin\OrderManagement.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Admin\UserManagement.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Checkout.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Info\Contact.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Info\Crew.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Login.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Shop\ThanksForShopping.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\TestComponent.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Login.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Admin\UserManagement.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Admin\OrderManagement.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Checkout.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Info\Crew.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Shop\ThanksForShopping.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Info\Contact.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Account\EditProfile.razor" />
+  </ItemGroup>
+
+</Project>

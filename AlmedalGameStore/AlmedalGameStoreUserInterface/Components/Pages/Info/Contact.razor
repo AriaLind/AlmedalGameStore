@@ -1,0 +1,46 @@
+﻿@page "/info/Contact"
+@rendermode InteractiveServer
+
+<Container Padding="Padding.Is5">
+    <Div Margin="Margin.IsAuto.OnX" Padding="Padding.Is5.OnX" Width="Width.Is75">
+        <Heading Size="HeadingSize.Is2" TextColor="TextColor.Light" Margin="Margin.Is3.FromBottom" TextAlignment="TextAlignment.Center">
+            Kontakta oss
+        </Heading>
+        <Paragraph Margin="Margin.Is3.FromBottom" TextColor="TextColor.Light" TextAlignment="TextAlignment.Center">
+            Har du frågor eller behöver hjälp? <br />
+            Kontakta oss genom formuläret nedan eller ring oss på 031-407733
+            
+        </Paragraph>
+        <Form>
+            <Field>
+                <FieldLabel TextColor="TextColor.Light">
+                    Din e-postadress
+                </FieldLabel>
+                <FieldBody>
+                    <TextEdit Placeholder="namn@epost.com" />
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel TextColor="TextColor.Light">
+                    Ämne
+                </FieldLabel>
+                <FieldBody>
+                    <TextEdit Placeholder="Vad gäller det?" />
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel TextColor="TextColor.Light">
+                    Meddelade
+                </FieldLabel>
+                <FieldBody TextColor="TextColor.Light">
+                    <MemoEdit Placeholder="Skicka ett meddelande..." Rows="5" />
+                </FieldBody>
+            </Field>
+            <Field TextAlignment="TextAlignment.Center">
+                <Button Color="Color.Primary">
+                    Skicka meddelande
+                </Button>
+            </Field>
+        </Form>
+    </Div>
+</Container>

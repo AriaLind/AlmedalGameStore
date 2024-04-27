@@ -1,0 +1,40 @@
+﻿@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using AlmedalGameStoreUserInterface.Components.Pages.ErrorPages
+
+@inject NavigationManager NavigationManager
+
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
+            <NotAuthorized>
+                @{
+                    RedirectTo403Forbidden();
+                }
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+    </Found>
+    <NotFound>
+        @{
+            RedirectTo404NotFound();
+        }
+    </NotFound>
+</Router>
+
+@* <ApplicationLoadingIndicator /> *@
+
+@code {
+
+    void RedirectTo403Forbidden()
+    {
+        NavigationManager.NavigateTo("error/403Forbidden");
+    }
+
+    void RedirectTo404NotFound()
+    {
+        NavigationManager.NavigateTo("error/404NotFound");
+    }
+
+}

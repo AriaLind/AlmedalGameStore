@@ -1,0 +1,97 @@
+﻿@page "/info/crew"
+@rendermode InteractiveServer
+
+<Container>
+    <Div Class="team-example" Margin="Margin.IsAuto.OnX" TextColor="TextColor.Primary">
+        
+        <Card>
+            <CardBody>
+                <Heading Size="HeadingSize.Is2" Margin="Margin.Is3.FromBottom" TextAlignment="TextAlignment.Center" TextWeight="TextWeight.Bold">
+                    Webbsidans Utvecklare
+                </Heading>
+
+                <Paragraph Margin="Margin.Is4.OnY" TextAlignment="TextAlignment.Center">
+                    Möt vårt team som har skapat denna hemsida.
+                </Paragraph>
+                <Row RowColumns="RowColumns.Are3">
+                    @MemberCard("Elin Skogsberg", "IT-Projektledare",
+                        "https://media.licdn.com/dms/image/D4E03AQEJJLO_XSJr7g/profile-displayphoto-shrink_800_800/0/1697187775202?e=1718841600&v=beta&t=6ySOtIDpQb-7fGTJLUgJq8zsHl9E9CUNZmcBwjQQuJc",
+                        "https://www.linkedin.com/in/elin-skogsberg/",
+                        "")
+                    @MemberCard("Casper Henberg", "IT-Projektledare",
+                             "https://media.licdn.com/dms/image/D4D35AQHcyVpr-6W2Pg/profile-framedphoto-shrink_200_200/0/1664985869558?e=1714572000&v=beta&t=Jd3E6NrlRO4ABy2nAw-M9xVNzkqFW_I4x-DFsmcj_8U",
+                        "https://www.linkedin.com/in/casper-henberg-b62aa4238/",
+                        "404NotFound")
+                    @MemberCard("Magnus Forsman", ".NET Cloud",
+                        "https://media.licdn.com/dms/image/D4D03AQEKV5re-f-MuQ/profile-displayphoto-shrink_800_800/0/1696865715530?e=1718841600&v=beta&t=Cgw5qPXu5yJSaFZoEOi1Q5wnpZO47oXiIZfLFODrKn8",
+                        "https://www.linkedin.com/in/magnus-forsman-a61078244/",
+                        "404NotFound")
+                    @MemberCard("Johan Åkerström", ".NET Cloud",
+                        "https://media.licdn.com/dms/image/D4E03AQFaSWhM5RRMeQ/profile-displayphoto-shrink_800_800/0/1696858505492?e=1718841600&v=beta&t=KEslY455cDiSaP6ZVgj9lcc5-N0LuhhahcRd2M-Kom4",
+                        "https://www.linkedin.com/in/johan-%C3%A5kerstr%C3%B6m-21977b1ba/",
+                        "404NotFound")
+                    @MemberCard("Tiina Välimäki", ".NET",
+                        "https://media.licdn.com/dms/image/D4E03AQFMylPlHm2iYw/profile-displayphoto-shrink_200_200/0/1696945248974?e=1718841600&v=beta&t=9VldKYNefPYtEVNOzwZ-0S8VV14yMmnjwjT7UwJQX2E",
+                        "https://www.linkedin.com/in/tiina-v%C3%A4lim%C3%A4ki-5257b2163/",
+                        "404NotFound")
+                    @MemberCard("Anton Malm", ".NET",
+                        "https://media.licdn.com/dms/image/D4D03AQFqwcpfxLfRxQ/profile-displayphoto-shrink_200_200/0/1700470210072?e=1718841600&v=beta&t=8XQwNJaCS83igdt7Y5jeUFjTY5DevHVKMxx93yCtit0",
+                        "https://www.linkedin.com/in/anton-malm-815437220/",
+                        "404NotFound")
+                    @MemberCard("Aria Lind", ".NET",
+                        "https://media.licdn.com/dms/image/D4D03AQEBaLhEb8vF6A/profile-displayphoto-shrink_800_800/0/1707067437613?e=1718841600&v=beta&t=ycaW5O9AmIJq0S5AZyTm3iccP1-5AQAR8C7FwyvFl3Q",
+                        "https://www.linkedin.com/in/aria-lind-192abb289/",
+                        "https://github.com/AriaLind")
+                    @MemberCard("Emelie Pozzi", "Mjukvarutestare",
+                        "https://media.licdn.com/dms/image/D4E03AQFkj_aUy4PVFg/profile-displayphoto-shrink_800_800/0/1699350188938?e=1718841600&v=beta&t=iZz-fiiEncwkdI_-Md72zCkm3Z41s4HlJ5agOn9fgPs",
+                        "https://www.linkedin.com/in/emelie-pozzi-058548128/",
+                        "404NotFound")
+                    @MemberCard("Hassan Mire", "Mjukvarutestare",
+                             "https://almedalstorage.blob.core.windows.net/almedalblob/hassan.jpg",
+                        "404NotFound",
+                        "404NotFound")
+                </Row>
+            </CardBody>
+        </Card>
+    </Div>
+</Container>
+
+@code {
+    private RenderFragment MemberCard(string fullName, string title, string imageUrl, string linkedInUrl, string githubUrl) => __builder =>
+    {
+        <Column>
+            <Div Flex="Flex.JustifyContent.Start" Gap="Gap.Is3" Margin="Margin.Is4.OnY">
+                <Image Source="@imageUrl" Text="Image Description" Style="width: 5rem; height: 5rem;" Border="Border.Rounded" />
+                <Div>
+                    <Div>
+                        <Div>
+                            <Heading Margin="Margin.Is0.FromBottom" Size="HeadingSize.Is5" TextColor="TextColor.Primary" TextWeight="TextWeight.Bold">
+                                @fullName
+                            </Heading>
+                            <Paragraph Margin="Margin.Is1.OnY" TextTransform="TextTransform.Uppercase">
+                                <Small>@title</Small>
+                            </Paragraph>
+                        </Div>
+                        <Div Margin="Margin.Is2.FromTop">
+                            <Anchor To="404NotFound" Flex="Flex.InlineFlex.JustifyContent.Center.AlignItems.Center" TextColor="TextColor.Muted">
+                                <Icon Name="@("fa-envelope")" />
+                            </Anchor>
+                            <Anchor To="@githubUrl" Flex="Flex.InlineFlex.JustifyContent.Center.AlignItems.Center" TextColor="TextColor.Muted" Margin="Margin.Is3.FromStart">
+                                <Icon Name="@("fab fa-github")" />
+                            </Anchor>
+                            <Anchor To="@linkedInUrl" Flex="Flex.InlineFlex.JustifyContent.Center.AlignItems.Center" TextColor="TextColor.Muted" Margin="Margin.Is3.FromStart">
+                                <Icon Name="@("fab fa-linkedin")" />
+                            </Anchor>
+                        </Div>
+                    </Div>
+                </Div>
+            </Div>
+        </Column>
+    };
+}
+<style>
+    .team-example a {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>

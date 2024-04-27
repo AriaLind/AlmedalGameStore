@@ -1,0 +1,115 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+@* <Container Style="display: flex; justify-content: center;">
+    <DisplayHeading Class="retro-font">Almedal Game Store</DisplayHeading>
+</Container> *@
+
+<Div>
+    <PageTitle>Almedal Game Store</PageTitle>
+    <div class="row  mt-4">
+<div class="col-12 col-lg-6">        
+            <Container Height="Height.Is25">
+                <Carousel id="myCarousel" @bind-SelectedSlide="@selectedSlide" Crossfade="true" Border="Border.Is1.OnAll.Rounded">
+                    <CarouselSlide Name="1">
+                        <Image Source="https://almedalstorage.blob.core.windows.net/almedalblob/mw3.jpg" Text="Lights image" Display="Display.Block" Width="Width.Is100" class="carousel-image"/>
+                    </CarouselSlide>
+                    <CarouselSlide Name="2">
+                        <Image Source="https://almedalstorage.blob.core.windows.net/almedalblob/minecraft.jpg" Text="Keyboard image" Display="Display.Block" Width="Width.Is100" class="carousel-image"/>
+                    </CarouselSlide>
+                    <CarouselSlide Name="3">
+                        <Image Source="https://almedalstorage.blob.core.windows.net/almedalblob/fifa22.jpg" Text="Road image" Display="Display.Block" Width="Width.Is100" class="carousel-image"/>
+                    </CarouselSlide>
+                </Carousel>
+            </Container>
+        </div>
+        <div class="col-12 col-lg-6">
+            <Container class="my-5"> 
+                <Div Flex="Flex.JustifyContent.Between.AlignItems.Center" Margin="Margin.IsAuto.OnX" Padding="Padding.Is5" Width="Width.Is100"   Background="Background.Transparent">
+                    <Heading Size="HeadingSize.Is2">
+                        <Span Display="Display.Block" TextColor="TextColor.Light">Bli medlem nu!</Span>
+                        <Span Display="Display.Block" TextColor="TextColor.Light">
+                            <Small>Få de bästa spelerbjudandena</Small>
+                        </Span>
+                    </Heading>
+                    <Button id="medlemsknapp" Color="Color.Light" Size="Size.ExtraLarge" To="/Account/Register" Type="ButtonType.Link" style="color:black">
+                        Bli medlem
+                    </Button>
+                </Div>
+            </Container>
+            <Container Padding="Padding.Is5.FromBottom">
+                <Row Class="row-cols-1 row-cols-md-2 row-cols-lg-3" Style="display: flex; flex-wrap: wrap;">
+                    @foreach (var game in top3SoldGames)
+                    {
+                        <Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is8.OnDesktop.Is10.OnTablet">
+                            <Card class="d-flex flex-column h-100" Style="background: linear-gradient(to bottom right, #A020F0, #2196F3);">
+                                <CardImage Source="@game.CoverPicturePath" class="card-img-top img-fluid" Style="height: 200px; object-fit: cover;"/>
+                                <CardBody class="d-flex flex-column">
+                                    <CardTitle style="color:white; font-size:25px">
+                                        @game.Name
+                                    </CardTitle>
+                                    <CardText class="flex-grow-1" style="color: white;">
+                                        @game.Description
+                                    </CardText>
+                                    <Button Color="Color.Light" To="/products" Type="ButtonType.Link" class="mt-auto">Till butiken</Button>
+                                </CardBody>
+                            </Card>
+                        </Column>
+                    }
+                </Row>
+            </Container>
+
+        </div>
+
+
+    </div>
+
+   @*  <Div Margin="Margin.IsAuto.OnX" TextColor="TextColor.Light">
+        <Div Flex="Flex.Column.Row.OnTablet" Width="Width.Is100">
+            <Div Width="Width.Is100" Padding="Padding.Is5" TextAlignment="TextAlignment.Center">
+                <Rating Color="Color.Warning" SelectedValue="5" MaxValue="5" ReadOnly Padding="Padding.Is4.FromBottom" />
+
+                <Paragraph>
+                    “Almedal Game Store erbjuder enastående upplevelser. Det är verkligen en bra butik med konkurrenskraftiga priser, ett brett utbud av spel och en personal som alltid är vänliga.”
+                </Paragraph>
+
+                <Paragraph Margin="Margin.Is3.FromTop" TextSize="TextSize.Medium" TextWeight="TextWeight.Bold" style="color: white;">
+                    August Simonsson
+                </Paragraph>
+            </Div>
+            <Div Width="Width.Is100" Padding="Padding.Is5" TextAlignment="TextAlignment.Center">
+                <Rating Color="Color.Warning" SelectedValue="5" MaxValue="5" ReadOnly Padding="Padding.Is4.FromBottom" />
+
+                <Paragraph>
+                    “Vi är så tacksamma för Almedal Game Store! Det är en underbar butik med enastående kundservice och ett utmärkt spelutbud.”
+                </Paragraph>
+
+                <Paragraph Margin="Margin.Is3.FromTop" TextSize="TextSize.Medium" TextWeight="TextWeight.Bold" style="color: white;">
+                    Johnny Svensson
+                </Paragraph>
+            </Div>
+            <Div Width="Width.Is100" Padding="Padding.Is5" TextAlignment="TextAlignment.Center">
+                <Rating Color="Color.Warning" SelectedValue="5" MaxValue="5" ReadOnly Padding="Padding.Is4.FromBottom" />
+
+                <Paragraph>
+                    “Almedal Game Store har levererat enastående upplevelser för oss. Det är verkligen en bra butik med ett brett utbud av spel och en personal som alltid är vänliga och hjälpsamma.”
+                </Paragraph>
+
+                <Paragraph Margin="Margin.Is3.FromTop" TextSize="TextSize.Medium" TextWeight="TextWeight.Bold" style="color: white;">
+                    John Gustavsson
+                </Paragraph>
+            </Div>
+        </Div>
+    </Div>
+
+ *@
+
+<style>
+    .carousel-image {
+        width: 100%;
+        height: 85vh;
+        object-fit: cover;
+    }
+</style>
+</Div>
+

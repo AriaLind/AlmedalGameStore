@@ -1,0 +1,100 @@
+﻿@using AlmedalGameStoreUserInterface.Services
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+
+@if (!NavigationManager.Uri.Contains("403Forbidden"))
+{
+    <Layout>
+        <LayoutContent>
+            <div class="page">
+                <main>
+                    <div class="parallax-container">
+                        <Div id="custom-nav">
+                        <LayoutHeader >
+                            <NavMenu />
+                        </LayoutHeader>
+                        </Div>
+                        <div class="parallax">
+                        </div>
+                        <div class="content">
+                            <LoadingIndicator FullScreen @ref="loadingIndicator">
+                                @Body
+                            </LoadingIndicator>
+                        </div>
+                        <Div id="custom-nav">
+                            <LayoutFooter>
+                                <CustomFooter/>
+                            </LayoutFooter>
+                        </Div>
+                    </div>
+                </main>
+            </div>
+        </LayoutContent>
+    </Layout>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .parallax-container {
+            position: relative;
+            height: auto;
+            overflow: hidden;
+            perspective: 1px;
+        }
+
+        .parallax {
+            background-image: url('Images/background.jpg');
+            background-size: cover;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transform-style: preserve-3d;
+            z-index: -1;
+        }
+
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+    </style>
+
+    <script>
+        window.addEventListener('scroll', function () {
+            const parallax = document.querySelector('.parallax');
+            if (parallax) {
+                let scrollPosition = window.pageYOffset;
+                parallax.style.transform = 'translateY(' + scrollPosition * 0.5 + 'px)';
+            }
+        });
+    </script>
+
+}
+@if (NavigationManager.Uri.Contains("error"))
+{
+    <head>
+        <link href="403Forbidden.css" rel="stylesheet" />
+    </head>
+
+    <div class="page">
+        <main>
+            @Body
+        </main>
+    </div>
+}
+
+
+@code
+{
+    [CascadingParameter]
+    LoadingIndicator loadingIndicator { get; set; }
+}

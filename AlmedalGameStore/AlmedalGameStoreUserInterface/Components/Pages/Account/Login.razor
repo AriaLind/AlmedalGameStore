@@ -1,0 +1,76 @@
+﻿@page "/Account/Login"
+@rendermode InteractiveServer
+@using AlmedalGameStoreShared.Dtos.Auth
+@using AlmedalGameStoreUserInterface.Auth
+@using System.Net.Http.Headers
+
+@inject AuthService AuthService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpClientFactory HttpClientFactory
+@inject ILoadingIndicatorService ApplicationLoadingIndicatorService
+
+<Container>
+    <Div Margin="Margin.IsAuto.OnX" Width="Width.Is50" Style="margin-top:5%;">
+        <Card Shadow="Shadow.Default">
+            <CardBody>
+                <Heading Size="HeadingSize.Is2" Margin="Margin.Is3.FromBottom" TextAlignment="TextAlignment.Center">
+                    Logga in
+                </Heading>
+                <EditForm Model="UserLoginDto" FormName="UserLoginForm" OnValidSubmit="LoginAccount">
+                    <DataAnnotationsValidator/>
+                    <Field>
+                        <FieldLabel>
+                            Användarnamn/Epost
+                        </FieldLabel>
+                        <FieldBody>
+                            <InputText @bind-Value="UserLoginDto.Email" Placeholder="namn@epost.com" class="form-control" id="email"/>
+                            <ValidationMessage For="@(() => UserLoginDto.Email)"/>
+                        </FieldBody>
+                    </Field>
+                    <Field>
+                        <FieldLabel>
+                            Lösenord
+                        </FieldLabel>
+                        <FieldBody>
+                            <InputText @bind-Value="UserLoginDto.Password" Placeholder="********" type="password" autocomplete="new-password" class="form-control" id="password"/>
+                            <ValidationMessage For="@(() => UserLoginDto.Password)"></ValidationMessage>
+                        </FieldBody>
+                    </Field>
+                    <Field Flex="Flex.Wrap.JustifyContent.Between">
+                        <Anchor To="#" TextColor="TextColor.Primary">
+                            Glömt Ditt Lösenord?
+                        </Anchor>
+                    </Field>
+                    <Field>
+                        <button id ="LoginBtn" class="btn btn-primary" Color="Color.Primary" type="submit" Block>
+                            Logga in
+                        </button>
+                    </Field>
+                    <Field>
+                        Inget Konto? <Anchor To="/account/register" TextColor="TextColor.Primary">Registrera</Anchor>
+                    </Field>
+                </EditForm>
+            </CardBody>
+        </Card>
+    </Div>
+</Container>
+
+
+
+@code {
+
+    private UserLoginDto UserLoginDto = new UserLoginDto();
+
+    [CascadingParameter]
+    LoadingIndicator loadingIndicator { get; set; }
+
+    private async Task LoginAccount()
+    {
+        await loadingIndicator.Show();
+
+        await AuthService.LoginAsync(new UserLoginDto { Email = UserLoginDto.Email, Password = UserLoginDto.Password });
+
+        await loadingIndicator.Hide();
+    }
+
+}

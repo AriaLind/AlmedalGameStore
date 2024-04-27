@@ -1,0 +1,105 @@
+﻿@page "/account/EditProfile"
+@rendermode InteractiveServer
+
+<Container>
+    <Div Margin="Margin.IsAuto.OnX" Padding="Padding.Is5.OnX" Width="Width.Is50">
+        <Card>
+            <CardBody>
+                <Heading Size="HeadingSize.Is2" Margin="Margin.Is3.FromBottom">
+                    Uppdatera profil
+                </Heading>
+                <EditForm Model="UpdateUserDto" FormName="UpdateUserForm" OnSubmit="UpdateUser">
+                    <DataAnnotationsValidator/>
+
+                    <Field>
+                        <FieldLabel>
+                            Användarnamn
+                        </FieldLabel>
+                        <FieldBody>
+                            <InputText @bind-Value="UpdateUserDto.UserName" Placeholder="exempel@email.se" class="form-control"/>
+                            <ValidationMessage For="@(() => UpdateUserDto.UserName)" />
+                        </FieldBody>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>
+                            E-post
+                        </FieldLabel>
+                        <FieldBody>
+                            <InputText readonly="true" @bind-Value="UpdateUserDto.Email" Placeholder="exempel@email.se" class="form-control" />
+                            <ValidationMessage For="@(() => UpdateUserDto.Email)" />
+                        </FieldBody>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>
+                            Nytt lösenord
+                        </FieldLabel>
+                        <FieldBody>
+                            <InputText @bind-Value="UpdateUserDto.NewPassword" Placeholder="********" type="password" class="form-control"/>
+                            <ValidationMessage For="@(() => UpdateUserDto.NewPassword)" />
+                        </FieldBody>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>
+                            Bekräfta lösenord
+                        </FieldLabel>
+                        <FieldBody>
+                            <InputText @bind-Value="UpdateUserDto.ConfirmNewPassword" Placeholder="********" type="password" class="form-control"/>
+                            <ValidationMessage For="@(() => UpdateUserDto.ConfirmNewPassword)" />
+                        </FieldBody>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>
+                            Nuvarande lösenord
+                        </FieldLabel>
+                        <FieldBody>
+                            <InputText @bind-Value="UpdateUserDto.CurrentPassword" Placeholder="********" type="password" class="form-control" />
+                            <ValidationMessage For="@(() => UpdateUserDto.CurrentPassword)" />
+                        </FieldBody>
+                    </Field>
+
+                    <Field>
+                        <Button Color="Color.Primary" Type="ButtonType.Submit">
+                            Uppdatera Profil
+                        </Button>
+                        <Button Color="Color.Danger" Outline Clicked="OpenDeleteUserModal">
+                            <Icon Name="IconName.Delete" Margin="Margin.Is2.FromEnd"/>
+                            Radera Profil
+                        </Button>
+                    </Field>
+                    
+                </EditForm>
+            </CardBody>
+        </Card>
+    </Div>
+    
+    <Div Flex="Flex.JustifyContent.Center">
+        <Modal @bind-Visible="@confirmDeleteUserModal">
+            <ModalContent Centered>
+                <ModalHeader>
+                    <ModalTitle>Delete item</ModalTitle>
+                    <CloseButton />
+                </ModalHeader>
+                <ModalBody>
+                    <Div Flex="Flex.JustifyContent.Center.AlignItems.Center" Padding="Padding.Is3">
+                        <Icon Name="IconName.Delete" IconSize="IconSize.x3" />
+                    </Div>
+                    <Paragraph TextAlignment="TextAlignment.Center">
+                        Är du säker på att du vill ta bort den här produkten?
+                    </Paragraph>
+                </ModalBody>
+                <ModalFooter Flex="Flex.JustifyContent.Center.AlignItems.Center" Gap="Gap.Is3">
+                    <Button Color="Color.Secondary" Outline Clicked="CloseDeleteProductModal">
+                        Nej, avbryt
+                    </Button>
+                    <Button Color="Color.Danger" Clicked="async () => await DeleteUser()">
+                        Ja, jag är säker
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    </Div>
+</Container>

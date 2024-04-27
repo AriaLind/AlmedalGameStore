@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlmedalGameStoreSQLApi", "AlmedalGameStoreSQLApi\AlmedalGameStoreSQLApi.csproj", "{6BDB036F-3F5D-45B8-9039-CC25171E34CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlmedalGameStoreMongoDbApi", "AlmedalGameStoreMongoDbApi\AlmedalGameStoreMongoDbApi.csproj", "{F3E31C9F-B519-42DC-8908-C6EE455F8E6E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlmedalGameStoreShared", "AlmedalGameStoreShared\AlmedalGameStoreShared.csproj", "{AEEF2AD2-2FB8-44CC-952A-BF0E9DE37FA9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlmedalGameStoreDataAccess", "AlmedalGameStoreDataAccess\AlmedalGameStoreDataAccess.csproj", "{AFA98DD7-1C9E-4D20-8726-2A9DACA4525C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{EA179317-37EC-468D-BD07-C60A3792C3DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{DA90CE82-6494-4B68-917E-5160D21ECC32}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlmedalGameStoreAuthApi", "AlmedalGameStoreAuthApi\AlmedalGameStoreAuthApi.csproj", "{D8406DF7-F348-46DF-8305-D0463CD72CBA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlmedalGameStoreUserInterface", "AlmedalGameStoreUserInterface\AlmedalGameStoreUserInterface.csproj", "{47C13F44-3050-433A-AFE4-34AB6B3DAF0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BDB036F-3F5D-45B8-9039-CC25171E34CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BDB036F-3F5D-45B8-9039-CC25171E34CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BDB036F-3F5D-45B8-9039-CC25171E34CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BDB036F-3F5D-45B8-9039-CC25171E34CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3E31C9F-B519-42DC-8908-C6EE455F8E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3E31C9F-B519-42DC-8908-C6EE455F8E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3E31C9F-B519-42DC-8908-C6EE455F8E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3E31C9F-B519-42DC-8908-C6EE455F8E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEEF2AD2-2FB8-44CC-952A-BF0E9DE37FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEEF2AD2-2FB8-44CC-952A-BF0E9DE37FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEEF2AD2-2FB8-44CC-952A-BF0E9DE37FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEEF2AD2-2FB8-44CC-952A-BF0E9DE37FA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFA98DD7-1C9E-4D20-8726-2A9DACA4525C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFA98DD7-1C9E-4D20-8726-2A9DACA4525C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFA98DD7-1C9E-4D20-8726-2A9DACA4525C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFA98DD7-1C9E-4D20-8726-2A9DACA4525C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8406DF7-F348-46DF-8305-D0463CD72CBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8406DF7-F348-46DF-8305-D0463CD72CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8406DF7-F348-46DF-8305-D0463CD72CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8406DF7-F348-46DF-8305-D0463CD72CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C13F44-3050-433A-AFE4-34AB6B3DAF0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C13F44-3050-433A-AFE4-34AB6B3DAF0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C13F44-3050-433A-AFE4-34AB6B3DAF0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C13F44-3050-433A-AFE4-34AB6B3DAF0C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6BDB036F-3F5D-45B8-9039-CC25171E34CF} = {DA90CE82-6494-4B68-917E-5160D21ECC32}
+		{F3E31C9F-B519-42DC-8908-C6EE455F8E6E} = {DA90CE82-6494-4B68-917E-5160D21ECC32}
+		{AFA98DD7-1C9E-4D20-8726-2A9DACA4525C} = {DA90CE82-6494-4B68-917E-5160D21ECC32}
+		{D8406DF7-F348-46DF-8305-D0463CD72CBA} = {DA90CE82-6494-4B68-917E-5160D21ECC32}
+		{47C13F44-3050-433A-AFE4-34AB6B3DAF0C} = {EA179317-37EC-468D-BD07-C60A3792C3DA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F325DB06-44E6-4EDA-B919-A00D0EB4994F}
+	EndGlobalSection
+EndGlobal

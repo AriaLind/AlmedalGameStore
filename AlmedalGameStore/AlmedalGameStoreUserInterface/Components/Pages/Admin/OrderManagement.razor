@@ -1,0 +1,142 @@
+﻿@page "/Admin/OrderManagement"
+@using AlmedalGameStoreUserInterface.Auth
+@using System.Security.Claims
+@using AlmedalGameStoreDataAccess.Repositories.Sql
+@using AlmedalGameStoreDataAccess.UnitsOfWork
+@using AlmedalGameStoreShared.Dtos.Carts
+@using AlmedalGameStoreShared.Dtos.Orders
+@using AlmedalGameStoreUserInterface.Services
+@using Amazon.Runtime
+@using Microsoft.AspNetCore.Authorization
+@rendermode InteractiveServer
+
+@inject SqlUnitOfWork _sqlUnitOfWork
+@inject IHttpClientFactory _httpClientFactory
+
+@attribute [Authorize(Roles = "Admin")]
+
+<button @onclick="ToggleCartsTableVisibility">Show Carts</button>
+<button @onclick="ToggleOrdersTableVisibility">Show Orders</button>
+
+@if (ShowCarts)
+{
+    <h2>KundKorgar</h2>
+
+    <table class="table" style="background-color:lightgrey;">
+        <thead>
+            <tr>
+                <th>Cart ID</th>
+                <th>Products</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cart in Carts)
+            {
+                <tr>
+                    <td>@cart.Id</td>
+                    <td>
+                        <ul>
+                            @foreach (var product in cart.ProductDtoList)
+                            {
+                                <li>@product.Name - @product.Price</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (ShowOrders)
+{
+    <div>
+        <h2>Ordrar</h2>
+        <table class="table" style="background-color:lightgrey;">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Cart ID</th>
+                    <th>Payment ID</th>
+                    <th>Purchase Date</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Zip Code</th>
+                    <th>City</th>
+                    <th>Delivery</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Orders)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.CartId</td>
+                        <td>@order.PaymentId</td>
+                        <td>@order.PurchaseDate</td>
+                        <td>@order.Email</td>
+                        <td>@order.Address</td>
+                        <td>@order.Phonenumber</td>
+                        <td>@order.ZipCode</td>
+                        <td>@order.City</td>
+                        <td>@order.Delivery</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    public List<CartDto> Carts { get; set; } = new List<CartDto>();
+    public List<OrderDto> Orders { get; set; } = new List<OrderDto>();
+
+    private bool ShowCarts { get; set; } = false;
+    private bool ShowOrders { get; set; } = false;
+
+    private void ToggleCartsTableVisibility()
+    {
+        ShowCarts = !ShowCarts;
+        if (ShowCarts)
+        {
+            ShowOrders = false; // Hide orders table if carts table is shown
+        }
+    }
+
+    private void ToggleOrdersTableVisibility()
+    {
+        ShowOrders = !ShowOrders;
+        if (ShowOrders)
+        {
+            ShowCarts = false; // Hide carts table if orders table is shown
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var _httpClient = _httpClientFactory.CreateClient("AlmedalGameStoreMongoDbApi");
+        var _httpClient2 = _httpClientFactory.CreateClient("AlmedalGameStoreMongoDbApi");
+
+        var key = await _sqlUnitOfWork.AuthKeyRepository.GetByNameAsync("MongoDbApi");
+
+        if (!_httpClient.DefaultRequestHeaders.Contains("X-Api-Key"))
+        {
+            _httpClient.DefaultRequestHeaders.Add("X-Api-Key", key.Key);
+        }
+        if (!_httpClient2.DefaultRequestHeaders.Contains("X-Api-Key"))
+        {
+            _httpClient2.DefaultRequestHeaders.Add("X-Api-Key", key.Key);
+        }
+
+        var response = await _httpClient.GetAsync("carts");
+        var result = await response.Content.ReadFromJsonAsync<CartListDto>();
+
+        Carts = result.Carts.ToList();
+
+        var response2 = await _httpClient2.GetAsync("orders");
+        var result2 = await response2.Content.ReadFromJsonAsync<OrderListDto>();
+
+        Orders = result2.Orders.ToList();
+    }
+}

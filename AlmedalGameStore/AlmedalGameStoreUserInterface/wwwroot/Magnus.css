@@ -1,0 +1,18 @@
+﻿@keyframes flash {
+    0% {
+        background-color: #ff0000;
+    }
+    /* Start with red */
+    50% {
+        background-color: #ffff00;
+    }
+    /* Transition to yellow */
+    100% {
+        background-color: #ff0000;
+    }
+    /* Transition back to red */
+}
+
+.flashing-background {
+    animation: flash 0.5s infinite; /* Apply the animation with 1s duration and infinite iteration */
+}
